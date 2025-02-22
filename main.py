@@ -1,8 +1,9 @@
-from config import CONCLUDE_CODE_PROMPT,CONCLUDE_PROJECT_PROMPT
+from config import CONCLUDE_CODE_PROMPT,CONCLUDE_PROJECT_PROMPT,MODULE_FIND_PROMPT
 from config import config_path
 from helper import read_config,write_config,is_code_file
+import ChangeCode
 import os
-from llm import chat
+from api_llm import chat
 import tqdm
 from pathlib import Path
 
@@ -46,3 +47,16 @@ if __name__ == '__main__':
     code_conclusions = [f"文件地址：{i['file']}\n该文件的功能和接口：{i['conclusion']}" for i in code_conclusions]
     project_struct = chat(CONCLUDE_PROJECT_PROMPT,'\n'.join(code_conclusions))
     print(project_struct)
+
+    # 3.进行交互
+    opt = input("请键入操作：\n\t"
+                "（1）修改功能\n\t"
+          "（2）添加某功能\n\t"
+                "（3）删除功能")
+    if opt == '1':
+        ChangeCode.change(project_struct,code_files,code_conclusions)
+    elif opt=='2':
+        feature = input("请输入要增加的功能：")
+
+    elif opt=='3':
+        feature = input("请输入要删除的功能：")
